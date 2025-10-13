@@ -22,15 +22,39 @@ time, mark, audio, video {
 	font-size: 100%;
 	font: inherit;
 	vertical-align: baseline;
+
 }
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section {
 	display: block;
 }
-body {
-	line-height: 1;
+html {
+	  min-height: 100vh;
+	box-sizing: border-box;
+	height: 100%;
+	background-color: #fffef8;
 }
+body {
+	box-sizing: border-box;
+	position: relative;
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+}
+footer {
+	position: relative;
+	left: 50%;
+	width: 100vw;
+	margin-left: -50vw;
+	height: 60px;
+	background: inherit;
+	margin-top: auto;
+	display: flex;
+	align-items: flex-end;
+	justify-content: flex-end;
+}
+
 ol, ul {
 	list-style: none;
 }
@@ -56,10 +80,10 @@ body {
 header {
 	display: flex;
 	justify-content: space-between;
-	margin: 50px 0
+	margin: 50px 0px;
 }
 section {
-	margin: 50px 0
+	margin: 150px 0
 }
 
 h1{
@@ -88,7 +112,11 @@ nav ul {
 	display: flex;
 	align-items: center;
 	list-style-type: none;
-
+	gap: 2rem;
+}
+nav img {
+	width: 20px;
+	height: 20px;
 }
 nav li {
 	padding: 0 10px;
@@ -123,7 +151,7 @@ li:hover {
 }
 #portfolio h2 {
 	text-align: center;
-	margin-bottom: 1em;
+	margin-bottom: 2em;
 }
 .gallery {
 	width: 100%;
@@ -179,10 +207,115 @@ input[type="submit"]{
 	text-align: center;
 	border-radius: 60px ;
 }
+input[type="submit"]:hover {
+	background-color: #0e2f28;
+	cursor: pointer;
+}
 
 footer nav ul {
+	height: 40px;
 	display: flex;
 	justify-content: flex-end;
-	margin: 2em
+	padding-right: 5rem;
 }
+/* ajout du css des boutons filter */
+
+.filters {
+	display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    padding: 0rem 0rem 3rem 0rem;
+}
+
+.filters-button {
+background-color: white;
+    border: 1px solid #1D6154;
+    font-family: 'Syne';
+    font-weight: 700;
+    font-size: 16px;
+    color: #1D6154;
+    border-radius: 20px;
+    padding: 0.5rem 1.2rem;
+}
+
+.filters-active {
+	background-color: #1D6154;
+    border: 1px solid #1D6154;
+    font-family: 'Syne';
+    font-weight: 700;
+    font-size: 16px;
+    color: white;
+    border-radius: 20px;
+    padding: 0.5rem 1.2rem;
+
+}
+
+nav a {
+	text-decoration: none;
+	color: inherit;
+}
+/*section Log in page*/
+
+
+
+.login-container {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 2rem;
+}
+
+.login-container form {
+	
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 1rem;
+}
+
+.login-container label {
+	font-size: small;
+	font-weight: 300;
+	margin-bottom: 0.5em;
+	
+}
+.login-container input {
+	width: 22rem;
+	height: 40px;
+	font-size: 1.2em;
+	border: none;
+	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+	
+}
+
+.form-group {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	margin-bottom: 1rem;
+	
+}
+
+.mdp {
+	color: inherit;
+}
+.login-button {
+	font-size: 1.2em;
+	font-family: 'Syne';
+    font-weight: 700;
+    color: white;
+    background-color: #1D6154;
+    padding: 0.8rem 2rem;
+    width: 12rem;
+    text-align: center;
+    border-radius: 60px;
+	border: none;
+}
+.login-button:hover {
+	background-color: #0e2f28;
+	cursor: pointer;
+}
+
 
