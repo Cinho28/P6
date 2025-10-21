@@ -3,18 +3,20 @@ import { fetchWorks } from "./Function.js";
 import {fetchCategories} from "./Function.js";
 import { displayWorks } from "./Function.js";
 import { activeStyleButton } from "./Function.js";
+import { logVerification } from "./Function.js";
+import {allButtonCreation } from "./Function.js";
 
 showAllWorks();//affiche tout par default
+
 //creation du bouton "tout" avec la fonction showAllWork en effet
-fetchCategories().then (categories => {
-const filtersContainer = document.querySelector(".filters");
-const buttonFiltersReset = document.createElement("button");
-buttonFiltersReset.textContent = "Tous";
-buttonFiltersReset.id = "idButton-0";
-buttonFiltersReset.classList.add('filters-button');
-filtersContainer.appendChild(buttonFiltersReset);
+( function (){
+  if (logVerification()) return;
+
+    fetchCategories().then (categories => {
+      const filtersContainer = document.querySelector(".filters");
+      const buttonFiltersReset = allButtonCreation();
 buttonFiltersReset.addEventListener("click", () => {
-activeStyleButton(buttonFiltersReset, "filters-button", "filters-active")
+  activeStyleButton(buttonFiltersReset, "filters-button", "filters-active")
   showAllWorks();
 });
 
@@ -38,3 +40,5 @@ categories.forEach(categories =>{
   });
 });
 });
+
+}());

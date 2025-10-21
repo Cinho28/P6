@@ -12,10 +12,11 @@ const form = document.getElementById('loginForm');
       body: jsonValue
     });
     const data = await res.json();
-
+    if (data.token === undefined) {
+      alert("Erreur: Email ou Mot de passe incorrect");
+      return;
+    }
     localStorage.setItem('token', data.token);
     localStorage.setItem('userId', data.userId);
-
-    console.log("login ok");
     window.location.href = '../index.html';
   });
