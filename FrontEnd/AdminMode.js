@@ -230,7 +230,6 @@ import {
             refreshModalContent();
             showAllWorksModal(".gallery-modal", false);
             showAllWorks(".gallery", true);
-            location.reload();
           } else {
             alert("Échec de l'ajout de l'œuvre.");
           }

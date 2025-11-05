@@ -116,6 +116,7 @@ export function deleteWork(workId) {
   }).then((res) => {
     if (res.ok) {
       alert("Œuvre supprimée avec succès !");
+      e.preventDefault();
       refreshModalContent();
       showAllWorksModal(".gallery-modal", false);
     } else {
@@ -148,6 +149,7 @@ export function showAllWorksModal(destination, figcaptionBoolean) {
           }).then((res) => {
             if (res.ok) {
               alert("Œuvre supprimée avec succès !");
+              e.preventDefault();
               refreshModalContent();
               showAllWorksModal(".gallery-modal", false);
               showAllWorks(".gallery", true);
