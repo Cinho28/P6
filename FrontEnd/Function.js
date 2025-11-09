@@ -23,8 +23,6 @@ export function displayWorks(worksToDisplay, destination, figcaptionBoolean) {
 
     if (figcaptionBoolean === true) {
       figure.innerHTML += `<figcaption>${work.title}</figcaption>`;
-    } else {
-      // do nothing
     }
     destination.appendChild(figure);
   });
@@ -113,16 +111,12 @@ export function deleteWork(workId) {
   fetch(`http://localhost:5678/api/works/${workId}`, {
     method: "DELETE",
     headers: { Authorization: `Bearer ${token}` },
-  }).then((res) => {
-    if (res.ok) {
-      alert("Œuvre supprimée avec succès !");
-      e.preventDefault();
-      refreshModalContent();
-      showAllWorksModal(".gallery-modal", false);
-    } else {
-      alert("Échec de la suppression de l'œuvre.");
-    }
   });
+}
+
+export function toggleStyleButton(element, defaultClassName, newClassName) {
+  element.classList.add(newClassName);
+  element.classList.remove(defaultClassName);
 }
 
 //fonction pour afficher les works dans la modal avec icone de suppression
@@ -139,26 +133,17 @@ export function showAllWorksModal(destination, figcaptionBoolean) {
       trashIcon.classList.add("trash-icon");
       div.appendChild(trashIcon);
       picture.appendChild(div);
-      document.querySelectorAll(".trash-icon-container").forEach((btn) =>
-        btn.addEventListener("click", (e) => {
+      const trashButtons = document.querySelectorAll(".trash-icon-container");
+      trashButtons.forEach((trashButton) => {
+        trashButton.addEventListener("click", (e) => {
           e.preventDefault();
-          const token = localStorage.getItem("token");
-          fetch(`http://localhost:5678/api/works/${btn.dataset.id}`, {
-            method: "DELETE",
-            headers: { Authorization: `Bearer ${token}` },
-          }).then((res) => {
-            if (res.ok) {
-              alert("Œuvre supprimée avec succès !");
-              e.preventDefault();
-              refreshModalContent();
-              showAllWorksModal(".gallery-modal", false);
-              showAllWorks(".gallery", true);
-            } else {
-              alert("Échec de la suppression de l'œuvre.");
-            }
-          });
-        })
-      );
+          e.stopPropagation();
+          const workId = trashButton.dataset.id;
+          deleteWork(workId);
+          refreshModalContent();
+          showAllWorks(".gallery", true);
+        });
+      });
     });
   });
 }
@@ -176,30 +161,202 @@ export function createReturnButton(destination) {
   return returnButton;
 }
 
-export function toggleStyleButton(element, defaultClassName, newClassName) {
-  element.classList.add(newClassName);
-  element.classList.remove(defaultClassName);
-}
-
 export function refreshModalContent() {
-  const submitModalButton = document.querySelector(".submit-modal");
+  const modalWrapper = document.querySelector(".modal-wrapper");
   const galleryModal = document.createElement("div");
   const modalContent = document.querySelector(".modal-content");
   const returnButton = document.querySelector(".return-button");
+  const Uploader = document.querySelector(".uploader");
   modalContent.innerHTML = "";
   galleryModal.classList.add("gallery-modal");
   modalContent.appendChild(galleryModal);
   showAllWorksModal(".gallery-modal", false);
   const titleModal = document.getElementById("title-modal");
   titleModal.textContent = "Galerie photo";
-  submitModalButton.textContent = "Ajouter une photo";
-  const Uploader = document.querySelector(".uploader");
-  toggleStyleButton(
-    submitModalButton,
-    "submit-modal-incomplete",
-    "submit-modal-complete"
-  );
   if (returnButton) {
     returnButton.remove();
   }
+}
+
+export function createSubmitButton() {
+  const modalWrapper = document.querySelector(".modal-wrapper");
+  const submitButton = document.createElement("button");
+  submitButton.classList.add("modal-buttons", "button-inactive");
+  submitButton.id = "submit-button";
+  submitButton.textContent = "Valider";
+  modalWrapper.appendChild(submitButton);
+  return submitButton;
+}
+
+export function createNextStepButton() {
+  const modalWrapper = document.querySelector(".modal-wrapper");
+  const nextStepButton = document.createElement("button");
+  nextStepButton.classList.add("modal-buttons", "button-active");
+  nextStepButton.id = "next-step-button";
+  nextStepButton.textContent = "Ajouter une photo";
+  modalWrapper.appendChild(nextStepButton);
+  nextStepButton.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const navModal = document.querySelector(".nav-modal");
+    const nextStepButton = document.querySelector(".modal-buttons");
+    const titleModal = document.getElementById("title-modal");
+    const modalContent = document.querySelector(".modal-content");
+    nextStepButton.remove();
+    /*suppression du bouton next et création du button formulaire d'upload*/
+    const submitButton = createSubmitButton();
+    modalContent.innerHTML = "";
+    titleModal.textContent = "Ajout photo";
+    const Uploader = document.createElement("div");
+    Uploader.classList.add("uploader");
+    modalContent.appendChild(Uploader);
+    const previewContainer = document.createElement("div");
+    previewContainer.classList.add("preview-container");
+    Uploader.appendChild(previewContainer);
+    const formInputFilelogo = document.createElement("img");
+    formInputFilelogo.src = "./assets/icons/File.png";
+    formInputFilelogo.alt = "Icône d'upload d'image";
+    formInputFilelogo.classList.add("file-logo");
+    Uploader.appendChild(formInputFilelogo);
+    //ajout des elements du uploader
+    const buttonInputFile = document.createElement("label");
+    buttonInputFile.setAttribute("for", "file-input");
+    buttonInputFile.classList.add("file-button");
+    buttonInputFile.textContent = "+ Ajouter photo";
+    Uploader.appendChild(buttonInputFile);
+    const formInputFileModal = document.createElement("input"); //input file a recuperer
+    formInputFileModal.setAttribute("type", "file");
+    formInputFileModal.setAttribute("accept", "image/png, image/jpeg");
+    formInputFileModal.setAttribute("id", "file-input");
+    formInputFileModal.setAttribute("name", "file-input");
+    formInputFileModal.classList.add("file-input");
+    buttonInputFile.appendChild(formInputFileModal);
+    //ajout du label
+    const formInputFileLabel = document.createElement("label");
+    formInputFileLabel.setAttribute("for", "file-input");
+    formInputFileLabel.textContent = "jpg, png : 4mo max";
+    formInputFileLabel.classList.add("file-label");
+    Uploader.appendChild(formInputFileLabel);
+    //ajout du label titre
+    const titresLabel = document.createElement("label");
+    titresLabel.setAttribute("for", "title-input");
+    titresLabel.textContent = "Titre";
+    titresLabel.classList.add("title-label", "label-style");
+    modalContent.appendChild(titresLabel);
+    //ajout de l'input "titre"
+    const titresInput = document.createElement("input"); //input titre a recuperer
+    titresInput.setAttribute("type", "texte");
+    titresInput.setAttribute("id", "title-input");
+    titresInput.setAttribute("name", "title-input");
+    titresInput.classList.add("title-input", "input-style");
+    modalContent.appendChild(titresInput);
+    //ajout du label categorie
+    const categoryLabel = document.createElement("label");
+    categoryLabel.setAttribute("for", "category-select");
+    categoryLabel.textContent = "Catégorie";
+    categoryLabel.classList.add("category-label", "label-style");
+    modalContent.appendChild(categoryLabel);
+    //ajout de la selection de categorie
+    const categorySelect = document.createElement("select"); //select categorie a recuperer
+    categorySelect.setAttribute("id", "category-select");
+    categorySelect.setAttribute("name", "category-select");
+    categorySelect.classList.add("category-select", "input-style");
+    modalContent.appendChild(categorySelect);
+    //remplissage des categories avec le backend
+    fetchCategories().then((categories) => {
+      categories.forEach((category) => {
+        const option = document.createElement("option");
+        option.textContent = category.name;
+        option.value = category.id;
+        categorySelect.appendChild(option);
+      });
+      if (!document.querySelector(".return-button")) {
+        const returnButton = createReturnButton(navModal);
+        returnButton.addEventListener("click", (e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          refreshModalContent();
+          submitButton.remove();
+          createNextStepButton();
+        });
+      }
+
+      //gestion de l'aperçu de l'image et conditionnement de la validation
+      const fileInput = document.getElementById("file-input");
+      fileInput.addEventListener("change", (e) => {
+        const file = e.target?.files?.[0];
+        if (!file) return;
+
+        if (!/image\/(png|jpeg)/.test(file.type)) {
+          alert("Veuillez sélectionner un fichier au format jpg ou png.");
+          fileInput.value = "";
+          return;
+        }
+        if (file.size > 4 * 1024 * 1024) {
+          alert("La taille du fichier ne doit pas dépasser 4 Mo.");
+          fileInput.value = "";
+          return;
+        }
+
+        previewContainer.innerHTML = "";
+        const imgPreview = document.createElement("img");
+        imgPreview.alt = file.name;
+        imgPreview.classList.add("preview-image");
+        imgPreview.src = URL.createObjectURL(file);
+        imgPreview.onload = () => {
+          URL.revokeObjectURL(imgPreview.src);
+        };
+        previewContainer.appendChild(imgPreview);
+        const inputUi = document.querySelectorAll(
+          ".file-logo, .file-label, .file-button"
+        );
+        if (file) {
+          inputUi.forEach((input) => {
+            input.classList.add("display-none");
+          });
+        }
+        previewContainer.classList.add("loaded");
+      });
+      //gestion des parametres de validation du bouton
+      const titleInput = document.getElementById("title-input");
+      const allInputs = [titleInput, categorySelect, fileInput];
+      allInputs.forEach((input) => {
+        input.addEventListener("input", () => {
+          if (
+            titleInput.value &&
+            categorySelect.value &&
+            fileInput.files.length
+          ) {
+            toggleStyleButton(submitButton, "button-inactive", "button-active");
+          }
+        });
+      });
+      submitButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (submitButton.classList.contains("button-active")) {
+          // Logique de soumission du formulaire
+          //évite les multiples envois
+          const inputFile = document.getElementById("file-input");
+          const token = localStorage.getItem("token");
+          const formData = new FormData();
+          formData.append("title", titleInput.value);
+          formData.append("image", inputFile.files[0]);
+          formData.append("category", categorySelect.value);
+          const res = fetch("http://localhost:5678/api/works", {
+            method: "POST",
+            headers: { Authorization: `Bearer ${token}` },
+            body: formData,
+          }).then((res) => {
+            if (res.ok) {
+              refreshModalContent();
+              showAllWorks(".gallery", true);
+              submitButton.remove();
+              createNextStepButton();
+            }
+          });
+        }
+      });
+    });
+  });
 }

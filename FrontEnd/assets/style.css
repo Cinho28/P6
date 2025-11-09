@@ -535,8 +535,7 @@ li span {
   color: black;
 }
 
-.submit-modal,
-.photo-add-button {
+.modal-buttons {
   position: absolute;
   font-size: 14px;
   font-family: "Syne";
@@ -551,12 +550,12 @@ li span {
   bottom: 40px;
 }
 
-.submit-modal-complete {
+.button-active {
   background-color: #1d6154;
   cursor: pointer;
 }
 
-.submit-modal-incomplete {
+.button-inactive {
   background-color: #b3b3b3;
   cursor: not-allowed;
 }
