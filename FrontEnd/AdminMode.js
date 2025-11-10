@@ -44,14 +44,23 @@ import {
 
   openModalButtons.forEach((openModalButtons) => {
     openModalButtons.addEventListener("click", (e) => {
+      e.preventDefault();
       openModal(e, modal);
       refreshModalContent();
+      if (!modalWrapper.contains(document.getElementById("next-step-button"))) {
+        createNextStepButton();
+      }
+
+      const submitButton = document.getElementById("submit-button");
+      if (modalWrapper.contains(submitButton)) {
+        submitButton.remove();
+      }
     });
   });
   closeModalButton.addEventListener("click", (e) => {
     closeModal(e, modal);
   });
-  modal1.addEventListener("click", (e) => {
+  modal.addEventListener("click", (e) => {
     if (!modalWrapper.contains(e.target)) {
       closeModal(e, modal);
     }

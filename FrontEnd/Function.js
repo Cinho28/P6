@@ -140,6 +140,7 @@ export function showAllWorksModal(destination, figcaptionBoolean) {
           e.stopPropagation();
           const workId = trashButton.dataset.id;
           deleteWork(workId);
+
           refreshModalContent();
           showAllWorks(".gallery", true);
         });
